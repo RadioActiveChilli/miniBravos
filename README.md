@@ -9,13 +9,24 @@ Built as a proof-of-concept that mirrors the architecture of the [Bravos](https:
 ## Architecture
 
 ```
-agent.py  ──►  mcp_client.py  ──►  CXG MCP Server (stdio subprocess)
-    │                                      │
-    │                                      └──► 160 scan templates
-    │
-    └──►  llama-cpp-python (local LLM)
-              └──► Llama-3.2-1B-Instruct (GGUF, CPU inference)
+main.py
+  └──► agent.py  ──►  mcp_client.py  ──►  CXG MCP Server (stdio subprocess)
+           │                                      │
+           │                                      └──► 160 scan templates
+           │
+           ├──►  llama-cpp-python (local LLM)
+           │         └──► Llama-3.2-1B-Instruct (GGUF, CPU inference)
+           │
+           └──►  reporter.py  ──►  reports/<timestamp>.html + .json
 ```
+
+| File | Responsibility |
+|---|---|
+| `main.py` | Entry point — adds `src/` to path, starts the agent |
+| `src/agent.py` | Agent loop — LLM reasoning, MCP tool calls, human-in-the-loop |
+| `src/mcp_client.py` | Thin async wrapper around the MCP stdio client |
+| `src/reporter.py` | Builds and saves HTML + JSON scan reports |
+| `src/config.py` | All configuration constants and path resolution |
 
 1. **Agent connects** to the CXG MCP server as a stdio subprocess
 2. **Discovers tools** available on the server
@@ -40,7 +51,7 @@ agent.py  ──►  mcp_client.py  ──►  CXG MCP Server (stdio subprocess)
 
 **1. Clone the repo**
 ```bash
-git clone https://github.com/<your-username>/miniBravos.git
+git clone https://github.com/RadioActiveChilli/miniBravos.git
 cd miniBravos
 ```
 
@@ -91,8 +102,7 @@ VERBOSE_REASONING = True    # print LLM reasoning and raw scan output
 ## Running
 
 ```bash
-cd src
-../venv/bin/python3 agent.py
+venv/bin/python3 main.py
 ```
 
 The agent will:
@@ -101,7 +111,7 @@ The agent will:
 - Ask the LLM to select the right approach
 - **Pause and ask for your approval** before running anything
 - Execute the scan if approved
-- Save a report to `src/reports/report_<timestamp>.html` and `.json`
+- Save a report to `reports/report_<timestamp>.html` and `.json`
 
 ---
 

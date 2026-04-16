@@ -10,14 +10,14 @@ Built as a proof-of-concept that mirrors the architecture of the [Bravos](https:
 
 ```
 main.py
-  └──► agent.py  ──►  mcp_client.py  ──►  CXG MCP Server (stdio subprocess)
-           │                                      │
-           │                                      └──► 160 scan templates
-           │
-           ├──►  llama-cpp-python (local LLM)
-           │         └──► Llama-3.2-1B-Instruct (GGUF, CPU inference)
-           │
-           └──►  reporter.py  ──►  reports/<timestamp>.html + .json
+  └──► src/agent.py  ──►  src/mcp_client.py  ──►  CXG MCP Server (stdio subprocess)
+              │                                            │
+              │                                            └──► 160 scan templates
+              │
+              ├──►  llama-cpp-python (local LLM)
+              │         └──► Llama-3.2-1B-Instruct (GGUF, CPU inference)
+              │
+              └──►  src/reporter.py  ──►  reports/<timestamp>.html + .json
 ```
 
 | File | Responsibility |
@@ -27,6 +27,23 @@ main.py
 | `src/mcp_client.py` | Thin async wrapper around the MCP stdio client |
 | `src/reporter.py` | Builds and saves HTML + JSON scan reports |
 | `src/config.py` | All configuration constants and path resolution |
+
+## Project Structure
+
+```
+miniBravos/
+├── main.py              # entry point
+├── src/
+│   ├── agent.py         # agent loop
+│   ├── config.py        # configuration and path resolution
+│   ├── mcp_client.py    # MCP stdio client wrapper
+│   └── reporter.py      # HTML + JSON report generation
+├── tests/               # test suite
+├── models/              # GGUF model files (gitignored)
+├── reports/             # scan output (gitignored)
+├── requirements.txt
+└── .gitignore
+```
 
 1. **Agent connects** to the CXG MCP server as a stdio subprocess
 2. **Discovers tools** available on the server

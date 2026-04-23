@@ -1,9 +1,9 @@
 import ast
 import asyncio
 import json
-
-
+import re
 from datetime import datetime
+
 from llama_cpp import Llama
 from rich.console import Console
 from rich.panel import Panel
@@ -116,7 +116,7 @@ async def _agent_loop(client: MCPClient):
         selection = parse_llm_json(raw_selection)
         tool_name = selection["tool_name"]
         arguments = {k: v for k, v in selection["arguments"].items() if k != "reasoning"}
-        reasoning = selection.get("reasoning") or arguments.pop("reasoning", "")
+        reasoning = selection.get("reasoning", "")
     except (json.JSONDecodeError, ValueError, KeyError, SyntaxError) as e:
         console.print(f"[red]Could not parse LLM response: {e}[/red]")
         console.print("[yellow]Raw response:[/yellow]", raw_selection)
@@ -188,7 +188,6 @@ async def _agent_loop(client: MCPClient):
     try:
         # The result content is a string repr of an MCP CallToolResult object.
         # Extract the JSON text embedded in the text field.
-        import re
         match = re.search(r"text='(\{.*\})'", raw_output, re.DOTALL)
         if match:
             text_content = match.group(1).encode().decode("unicode_escape")

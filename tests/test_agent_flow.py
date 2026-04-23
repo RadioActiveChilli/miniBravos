@@ -15,9 +15,10 @@ import asyncio
 import json
 import sys
 import unittest
+from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
-sys.path.insert(0, "src")
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 
 # ---------------------------------------------------------------------------

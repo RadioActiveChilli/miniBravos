@@ -1,4 +1,4 @@
-llama-cpp-python
-huggingface-hub
+llama-cpp-python  # tested on 0.3.20 — newer versions may have breaking changes
+huggingface-hub   # tested on 1.10.2
 mcp>=1.27.0
 rich>=15.0.0

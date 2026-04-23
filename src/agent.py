@@ -2,6 +2,8 @@ import ast
 import asyncio
 import json
 
+
+from datetime import datetime
 from llama_cpp import Llama
 from rich.console import Console
 from rich.panel import Panel
@@ -136,15 +138,19 @@ async def _agent_loop(client: MCPClient):
         alt_prompt = [
             {
                 "role": "system",
-                "content": "You are a security scanning agent. The user rejected your proposed scan.",
+                "content": (
+                    "You are a security scanning agent. The user rejected your proposed scan. "
+                    "Reply with ONLY a valid JSON object using double quotes. No explanation. No markdown. "
+                    "Format: {\"tool_name\": \"<name>\", \"arguments\": {\"target\": \"<host:port>\", \"scope\": \"<scope>\"}, \"reasoning\": \"<one sentence>\"}"
+                ),
             },
             {
                 "role": "user",
                 "content": (
-                    f"The user rejected the scan using tool '{tool_name}' with args {arguments}. "
-                    f"Available tools:\n{tools_summary}\n\n"
-                    "Suggest a less intrusive alternative approach. Respond in JSON with keys: "
-                    "'tool_name', 'arguments', 'reasoning'."
+                    f"Target: {TARGET}\nScope: {SCOPE}\n\n"
+                    f"The user rejected the scan using tool '{tool_name}'. "
+                    f"Available scan tools:\n{scan_tools_summary}\n\n"
+                    "Suggest a less intrusive alternative. Reply with JSON only. Use the target and scope values exactly as given."
                 ),
             },
         ]

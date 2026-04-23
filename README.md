@@ -134,7 +134,11 @@ The agent will:
 
 ## Human-in-the-loop
 
-Typing `n` at the checkpoint triggers a second suggestion from the agent. Typing `n` again aborts cleanly — nothing is scanned without consent.
+Before any scan runs, the agent pauses and shows you exactly what it intends to do. You have full control:
+
+- **`y`** — approve and run the scan
+- **`n`** — reject; the agent reasons about a less intrusive alternative and presents a second checkpoint
+- **`n` again** — abort cleanly; nothing is ever scanned without your consent
 
 ```
 ╭─────────────── Checkpoint — Approve Scan? ───────────────╮
@@ -144,6 +148,23 @@ Typing `n` at the checkpoint triggers a second suggestion from the agent. Typing
 ╰──────────────────────────────────────────────────────────╯
 Proceed with scan? [y/n] (n):
 ```
+
+---
+
+## Tests
+
+An automated test suite covers all three checkpoint outcomes without requiring a live LLM or CXG connection:
+
+```bash
+python tests/test_agent_flow.py
+```
+
+| Test class | Scenario |
+|---|---|
+| `TestHappyPath` | User approves first suggestion — original tool runs |
+| `TestAltPath` | User rejects first, approves alternative — alt tool runs, JSON enforcement verified |
+| `TestAbortPath` | User rejects both — no scan is ever executed |
+| `TestParseLlmJson` | JSON parser handles fenced, single-quoted, and unclosed responses |
 
 ---
 

@@ -1,6 +1,6 @@
 # miniBravos
 
-A lightweight agentic security scanner that connects to the [CXG (CERT-X-GEN)](https://www.bugb.io/cert-x-gen) MCP server, reasons about what to scan, and executes vulnerability detection templates against a target — with a human-in-the-loop approval checkpoint before any scan or exploit attempt runs.
+A lightweight agentic security scanner that connects to the [CXG (CERT-X-GEN)](https://www.bugb.io/cert-x-gen) MCP server, reasons about what to scan, and executes vulnerability detection templates against a target — with a human-in-the-loop approval checkpoint before any scan or exploit attempt runs. Recon and exploit verification are driven by [Playwright](https://playwright.dev/) (headless Chromium).
 
 Built as a proof-of-concept that mirrors the architecture of the [Bravos](https://www.bugb.io/bravos) security workbench on a smaller, more comprehensible scale.
 
@@ -254,4 +254,5 @@ All external dependencies (Playwright, CXG, LLM) are mocked. Tests cover happy p
 
 - [CERT-X-GEN platform](https://www.bugb.io/cert-x-gen)
 - [Bravos system](https://www.bugb.io/bravos)
+- [Playwright for Python](https://playwright.dev/python/)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
